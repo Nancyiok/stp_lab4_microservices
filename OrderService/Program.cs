@@ -1,3 +1,4 @@
+using System.Text.Encodings.Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using OrderService.Data;
@@ -15,7 +16,9 @@ builder.Services.AddHttpClient<UserClient>(client =>
     client.Timeout = TimeSpan.FromSeconds(5);
 });
 
-builder.Services.AddControllers();
+// keep Cyrillic readable, by default it comes out as \uXXXX
+builder.Services.AddControllers()
+    .AddJsonOptions(o => o.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping);
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "OrderService", Version = "v1" });
